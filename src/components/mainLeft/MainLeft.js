@@ -9,7 +9,7 @@ const MainLeft = () => {
   return (
     <div>
       <ButtonGroup orientation='vertical' fullWidth>
-        <Button color='red'>
+        <Button variant='contained' color='inActive'>
           <Grid container direction='column'>
             <Grid item>
               <PeopleAltIcon />
@@ -17,7 +17,7 @@ const MainLeft = () => {
             <Grid item>Suggestions</Grid>
           </Grid>
         </Button>
-        <Button>
+        <Button variant='contained' color='secondary'>
           <Grid container direction='column' alignItems='center'>
             <Grid item>
               <AssessmentIcon />
