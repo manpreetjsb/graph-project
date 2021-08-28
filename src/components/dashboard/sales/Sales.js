@@ -34,27 +34,14 @@ const Sales = () => {
     ],
   }
   useEffect(() => {
-    /* fetch('../../data/sales-michael.csv').then(function (response) {
-      //console.log(response)
-      if (response && response.body) {
-        const reader = response.body.getReader()
-        const decoder = new TextDecoder('utf-8')
-
-        return reader.read().then(function (result) {
-          console.log(result)
-          return decoder.decode(result.value)
-        })
-      }
-    } */
     async function fetchMyAPI() {
       const response = await fetch(data)
       const reader = response.body.getReader()
-      const result = await reader.read() // raw array
+      const result = await reader.read()
       const decoder = new TextDecoder('utf-8')
-      const csv = decoder.decode(result.value) // the csv text
-      const results = Papa.parse(csv, { header: true }) // object with { data, errors, meta }
+      const csv = decoder.decode(result.value)
+      const results = Papa.parse(csv, { header: true })
       const option = results.data
-      //console.log(option)
       const categories = option.map(({ Quarter }) => Quarter)
       setCategories(categories)
       const series = option.map((item) =>
