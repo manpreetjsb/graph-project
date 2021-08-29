@@ -107,7 +107,7 @@ const Dashboard = () => {
           <Paper variant='outlined'>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
-                Graph
+                <MySale />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <AdherenceVolumeOfCallEmil />
