@@ -11,6 +11,8 @@ HighchartsMore(Highcharts)
 const MySale = () => {
   const [michaelSales2016, setMichaelSales2016] = useState()
 
+  const [data, setData] = useState([])
+
   const options = {
     chart: {
       type: 'boxplot',
@@ -40,10 +42,7 @@ const MySale = () => {
     series: [
       {
         name: 'Sales',
-        data: [
-          [760, 801, 848, 895, 965],
-          [733, 853, 939, 980, 1080],
-        ],
+        data: data,
         tooltip: {
           headerFormat: '<em>Experiment No {point.key}</em><br/>',
         },
@@ -65,6 +64,14 @@ const MySale = () => {
     ],
   }
 
+  const calSales2016 = (arry, colNAme) => {
+    return arry
+      .filter((item) => {
+        return item.Quarter.includes('2016')
+      })
+      .map((item) => parseInt(item[colNAme]))
+  }
+
   const fetchmySalesData = async (path) => {
     const response = await fetch(path)
     const reader = response.body.getReader()
@@ -73,18 +80,21 @@ const MySale = () => {
     const csv = decoder.decode(result.value)
     const results = Papa.parse(csv, { header: true })
     const option = results.data
-    console.log(option)
-    return option
+    const nationalSales2016 = calSales2016(option, 'Total Sales (£)')
+    nationalSales2016.sort()
+    nationalSales2016.splice(2, 0, 2475)
+    console.log(nationalSales2016)
+
+    const regionalSales2016 = calSales2016(option, 'Greater London (£)')
+    const getsum = regionalSales2016.reduce((a, b) => a + b, 0) / 4
+    regionalSales2016.splice(2, 0, getsum)
+    regionalSales2016.sort()
+    console.log(regionalSales2016)
+
+    const combined2 = [nationalSales2016, regionalSales2016]
+    setData(combined2)
+    console.log(data)
   }
-  /* 
-  const calSumOfSales = (year, yearArry) => {
-    yearArry
-      .filter((item) => {
-        return item.Quarter.includes(year)
-      })
-      .map((item) => parseInt(item['Michael Sales (£)']))
-      .reduce((a, b) => a + b, 0)
-  } */
 
   useEffect(() => {
     async function fetchMyAPI() {
@@ -104,7 +114,9 @@ const MySale = () => {
         .reduce((a, b) => a + b, 0)
       console.log(sumOfMichaelSales2016)
       setMichaelSales2016(sumOfMichaelSales2016)
-      console.log(michaelSales2016)
+      if (!michaelSales2016) {
+        setMichaelSales2016(sumOfMichaelSales2016)
+      }
     }
     fetchMyAPI()
     fetchmySalesData(salesOfRegional)
